@@ -19,7 +19,7 @@ import (
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 
-	"github.com/sybogames/dummy-services/helloworld"
+        "google.golang.org/grpc/examples/helloworld/helloworld"
 )
 
 type config struct {
