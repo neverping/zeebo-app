@@ -1,0 +1,25 @@
+name: Docker Image Build CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  create-docker-images:
+    env:
+      go-source-dir: ./services/go
+      python-source-dir: ./services/python
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Docker image for zeebo-go
+      working-directory: ${{ env.go-source-dir }}
+      run: docker image build . --file Dockerfile --tag zeebo-go:$(date +%Y%m%d-%H%M%S)
+    - name: Build Docker image for zeebo-python
+      working-directory: ${{ env.python-source-dir }}
+      run: docker image build . --file Dockerfile --tag python-go:$(date +%Y%m%d-%H%M%S)
