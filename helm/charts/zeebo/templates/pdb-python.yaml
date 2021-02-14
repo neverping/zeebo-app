@@ -1,0 +1,13 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.apps.python.svc.name }}
+  annotations:
+    {{- include "zeebo.annotations" . | nindent 4 }}
+  labels:
+    {{- include "zeebo.labelsPython" . | nindent 4 }}
+spec:
+  maxUnavailable: 50%
+  selector:
+    matchLabels:
+      {{- include "zeebo.selectorLabelsPython" . | nindent 6 }}
