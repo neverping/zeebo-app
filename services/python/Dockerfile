@@ -47,6 +47,6 @@ COPY --from=virtualenv /opt/virtualenv /opt/virtualenv
 
 # The app listens on port 50051 by default using PORT environment variable.
 ENV PORT=50051
-EXPOSE 50051/udp
+EXPOSE 50051/tcp
 
 CMD [ "python", "/usr/local/src/python-service/greeter_server.py" ]
