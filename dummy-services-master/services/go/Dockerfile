@@ -2,8 +2,8 @@ FROM golang:1.15-alpine3.13 as builder
 
 RUN apk add --no-cache git
 
-COPY ./go-service /usr/src/go-service
-WORKDIR /usr/src/go-service
+COPY ./go-service /usr/local/src/go-service
+WORKDIR /usr/local/src/go-service
 COPY go.mod .
 COPY go.sum .
 
