@@ -1,0 +1,17 @@
+apiVersion: v2
+appVersion: "1.0"
+description: Zeebo demo app
+name: zeebo
+version: 0.0.1
+keywords:
+  - zeebo
+  - devops
+home: "https://github.com/neverping/zeebo-app"
+sources:
+  - "https://github.com/neverping/zeebo-app"
+maintainers:
+  - name: "Willian Braga da Silva"
+    email: "neverping@gmail.com"
+    url: "https://github.com/neverping"
+icon: "https://avatars.githubusercontent.com/u/333393?s=60&v=4"
+deprecated: false

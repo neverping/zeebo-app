@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.apps.go.svc.name }}
+  labels:
+    {{- include "zeebo.labelsGo" . | nindent 4 }}
+  annotations:
+    nginx.ingress.kubernetes.io/default-backend: {{ .Values.apps.go.svc.name }}
+    nginx.ingress.kubernetes.io/custom-http-errors: "403,404,415"
+    {{- include "zeebo.annotations" . | nindent 4 }}
+    # This is need to proxy the callers hostname to the load balancer
+    use-proxy-protocol: "true"
+    kubernetes.io/ingress.class: "nginx"
+{{- with .Values.ingress.annotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  defaultBackend:
+    service:
+      name: {{ .Values.apps.go.svc.name | quote }}
+      port:
+        number: {{ .Values.apps.go.envs.port }}
+  rules:
+    - host: {{ .Values.apps.go.svc.name }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.apps.go.svc.name }}
+                port:
+                  number: {{ .Values.apps.go.envs.port }}

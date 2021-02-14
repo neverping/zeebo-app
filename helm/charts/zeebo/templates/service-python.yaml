@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.apps.python.svc.name }}
+  labels:
+    {{- include "zeebo.labelsPython" . | nindent 4 }}
+  annotations:
+    {{- include "zeebo.annotations" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.apps.python.envs.port }}
+      targetPort: {{ .Values.apps.python.envs.port }}
+      protocol: TCP
+      name: http
+  selector:
+  {{- include "zeebo.selectorLabelsPython" . | nindent 4 }}

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.apps.go.svc.name }}
+  labels:
+    {{- include "zeebo.labelsGo" . | nindent 4 }}
+  annotations:
+    {{- include "zeebo.annotations" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.apps.go.envs.port }}
+      targetPort: {{ .Values.apps.go.envs.port }}
+      protocol: TCP
+      name: http
+  selector:
+  {{- include "zeebo.selectorLabelsGo" . | nindent 4 }}

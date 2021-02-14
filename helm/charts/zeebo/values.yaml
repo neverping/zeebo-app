@@ -1,0 +1,100 @@
+ingress:
+  hostname: zeebo
+
+images:
+  python:
+    repository: neverping/zeebo-python
+  go:
+    repository: neverping/zeebo-go
+  pullPolicy: Always
+
+apps:
+  go:
+    svc:
+      name: "zeebo-go"
+    envs:
+      port: 4458
+      requestTimeout: 5
+      idleTimeout: 10
+    probes:
+      readinessProbe:
+        initialDelaySeconds: 5
+        tcpSocket:
+          port: 4458
+      livenessProbe:
+        initialDelaySeconds: 5
+        tcpSocket:
+          port: 4458
+  python:
+    svc:
+      name: "zeebo-python"
+    envs:
+      port: 50051
+    probes:
+      readinessProbe:
+        initialDelaySeconds: 5
+        tcpSocket:
+          port: 50051
+      livenessProbe:
+        initialDelaySeconds: 5
+        tcpSocket:
+          port: 50051
+
+# The team owning this chart
+team: "devops"
+repository: https://github.com/neverping/zeebo-app
+
+# Resource for the service
+# requests: When using the amount of memory the service is marked as a candidate for termination in case
+#           of out of memory on the node
+# limits: if the service reaches this amount it WILL be restarted
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+# number of instance to run
+replicaCount: 1
+
+# Upgrade strategy - RollingUpdate is currently the only one supported by TS at the moment
+upgrade:
+  strategy: RollingUpdate
+  maxSurge: 1
+  maxUnavailable: 1
+
+#
+#  Ingress for exposing the service inside the VPC
+#
+ingressinternal:
+  enabled: true
+  annotations:
+  # hosts will create a hostname accesible from inside the VPC
+  # in this case example.eu-west-1.test.ts.sv, some of the values comes from the site, environment, region above
+  tls:
+    enabled: false
+    client_certs_required: false
+
+#
+# Ingress for exposing the service on the internet
+#
+ingress:
+  enabled: true
+  annotations:
+    # Whitelist certain IP's to access this service
+    # nginx.ingress.kubernetes.io/whitelist-source-range: 192.30.252.0/22,185.199.108.0/22,5.56.144.196/32,5.56.144.198/32,142.254.28.146/32,178.49.148.100/32,87.243.3.34/32,109.166.189.50/32,78.40.84.83/32,4.53.137.82/32,173.247.199.142/32
+
+  # hosts will create a hostname accesible from the internet
+  # in this case example.eu-west-1.test.ts.sv, some of the values comes from the site, environment, region above
+  tls:
+    enabled: true
+    client_certs_required: false
+
+# Certificate for the service if TLS is enabled in the ingress section.
+# TODO: action required here!
+certs:
+  trusted_ca:
+  crt:
+  key:

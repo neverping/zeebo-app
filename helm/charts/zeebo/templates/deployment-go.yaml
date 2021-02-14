@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.apps.go.svc.name }}
+  annotations:
+    {{- include "zeebo.annotations" . | nindent 4 }}
+  labels:
+    {{- include "zeebo.labelsGo" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: {{ .Values.upgrade.strategy }}
+    rollingUpdate:
+      maxSurge: {{ .Values.upgrade.maxSurge }}
+      maxUnavailable: {{ .Values.upgrade.maxUnavailable }}
+  selector:
+    matchLabels:
+      {{- include "zeebo.selectorLabelsGo" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "zeebo.selectorLabelsGo" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.apps.go.svc.name }}
+        image: "{{ .Values.images.go.repository }}:latest"
+        imagePullPolicy: {{ .Values.images.pullPolicy }}
+        env:
+        - name: PORT
+          value: {{ .Values.apps.go.envs.port | quote }}
+        - name: SERVICE_ENDPOINT  
+          value: "{{ .Values.apps.python.svc.name }}:{{ .Values.apps.python.envs.port }}"
+        - name: REQUEST_TIMEOUT
+          value: {{ .Values.apps.go.envs.requestTimeout | quote }}
+        - name: IDLE_TIMEOUT
+          value: {{ .Values.apps.go.envs.idleTimeout | quote }}
+        ports:
+        - containerPort: {{ .Values.apps.go.envs.port }}
+          protocol: TCP
+{{ toYaml .Values.apps.go.probes | indent 8 }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.apps.python.svc.name }}
+  annotations:
+    {{- include "zeebo.annotations" . | nindent 4 }}
+  labels:
+    {{- include "zeebo.labelsPython" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: {{ .Values.upgrade.strategy }}
+    rollingUpdate:
+      maxSurge: {{ .Values.upgrade.maxSurge }}
+      maxUnavailable: {{ .Values.upgrade.maxUnavailable }}
+  selector:
+    matchLabels:
+      {{- include "zeebo.selectorLabelsPython" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "zeebo.selectorLabelsPython" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.apps.python.svc.name }}
+        image: "{{ .Values.images.python.repository }}:latest"
+        imagePullPolicy: {{ .Values.images.pullPolicy }}
+        env:
+        - name: PORT
+          value: {{ .Values.apps.python.envs.port | quote }}
+        ports:
+        - containerPort: {{ .Values.apps.python.envs.port }}
+          protocol: TCP
+{{ toYaml .Values.apps.python.probes | indent 8 }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
