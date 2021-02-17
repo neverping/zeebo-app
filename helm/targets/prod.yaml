@@ -1,0 +1,4 @@
+## Add your custom values in here. You can follow this example.
+ingress:
+  hostname: zeebo.example.com
+
