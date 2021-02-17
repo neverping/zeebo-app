@@ -1,0 +1,56 @@
+The {{ .Chart.Name }} chart is now live!
+
+Your release is named {{ .Release.Name }}. Use this if you need to troubleshoot this service.
+
+This chart is maintained by the {{ $.Values.team }} team. Please feel free to contact them in case of issues.
+
+---> USEFUL INFORMATIONS:
+
+The {{ .Chart.Name }} was deployed on namespace '{{ $.Values.namespace }}'
+
+If any of these values don't match what you were expecting, check either the supplied commands in Helm or if you are using custom values file, double check them.
+
+---> SUPPORTED SITES:
+
+The {{ .Chart.Name }} supports mTLS for different internal services. The list vary based on the region, environment, and site.
+
+---> MINIKUBE NOTES:
+
+If you are running Minikube from a fresh install, please install the Ingress controller in order to be able to connect and test 'zeebo' locally.
+
+You can do this by running the command below:
+
+$ minikube addons enable ingress
+
+After installing the ingress controller, you can test locally via curl by following these steps:
+
+1. Get the ingress IP using "kubectl get ing" like in the example below:
+
+$ kubectl get ing
+NAME       CLASS    HOSTS      ADDRESS          PORTS   AGE
+zeebo-go   <none>   zeebo-go   192.168.99.100   80      78m
+
+2. From the HOSTS address you see above, run curl using the same hostname set by this ingress:
+
+$ curl http://192.168.99.100 -vH "Host: zeebo-go"
+
+The reponse will be something like this, with only a single dot in the body:
+
+*   Trying 192.168.99.100...
+* TCP_NODELAY set
+* Connected to 192.168.99.100 (192.168.99.100) port 80 (#0)
+> GET / HTTP/1.1
+> Host: zeebo-go
+> User-Agent: curl/7.58.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Wed, 17 Feb 2021 19:46:25 GMT
+< Content-Type: text/plain
+< Content-Length: 1
+< Connection: keep-alive
+< 
+* Connection #0 to host 192.168.99.100 left intact
+.
+ 
+There are other API routes that you may try it on, such as '/heartbeat', '/dummy/hello', '/dummy/service'.
