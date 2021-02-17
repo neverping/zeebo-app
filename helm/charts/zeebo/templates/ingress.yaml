@@ -21,7 +21,7 @@ spec:
       port:
         number: {{ .Values.apps.go.envs.port }}
   rules:
-    - host: {{ .Values.apps.go.svc.name }}
+    - host: {{ .Values.ingress.hostname }}
       http:
         paths:
           - path: /
