@@ -27,12 +27,12 @@ After installing the ingress controller, you can test locally via curl by follow
 1. Get the ingress IP using "kubectl get ing" like in the example below:
 
 $ kubectl get ing
-NAME       CLASS    HOSTS      ADDRESS          PORTS   AGE
-zeebo-go   <none>   zeebo-go   192.168.99.100   80      78m
+NAME      CLASS     HOSTS      ADDRESS          PORTS   AGE
+zeebo-go  <none>    {{ .Values.ingress.hostname }}   192.168.99.100   80      78m
 
 2. From the HOSTS address you see above, run curl using the same hostname set by this ingress:
 
-$ curl http://192.168.99.100 -vH "Host: zeebo-go"
+$ curl http://192.168.99.100 -vH "Host: {{ .Values.ingress.hostname }}"
 
 The reponse will be something like this, with only a single dot in the body:
 
@@ -40,7 +40,7 @@ The reponse will be something like this, with only a single dot in the body:
 * TCP_NODELAY set
 * Connected to 192.168.99.100 (192.168.99.100) port 80 (#0)
 > GET / HTTP/1.1
-> Host: zeebo-go
+> Host: {{ .Values.ingress.hostname }}
 > User-Agent: curl/7.58.0
 > Accept: */*
 > 
