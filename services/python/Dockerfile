@@ -17,7 +17,7 @@ RUN mkdir /usr/local/src/python-protobuf-generated && \
    cp /usr/local/src/python-protobuf-generated/protobuf/* /usr/local/src/python-service/
 
 
-FROM python:3.8-slim-buster as virtualenv
+FROM python:3.11-slim-bookworm as virtualenv
 
 ENV LANG=C.UTF-8
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -32,7 +32,7 @@ COPY ./requirements.txt /usr/local/src/python-requirements/
 RUN pip install -r /usr/local/src/python-requirements/requirements.txt
 
 
-FROM python:3.8-slim-buster as app
+FROM python:3.11-slim-bookworm as app
 LABEL maintainer="neverping@gmail.com"
 
 ENV VIRTUAL_ENV=/opt/virtualenv
