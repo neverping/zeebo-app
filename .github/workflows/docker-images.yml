@@ -18,12 +18,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: "Login to neverping's DockerHub private account"
-      uses: docker/login-action@v1 
+      uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKERHUB_LOGIN }}
         password: ${{ secrets.DOCKERHUB_PASSWD }}
     - name: Build and publish zeebo-python image into Docker Hub.
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v5
       with:
         context: ${{ env.python-source-dir }}
         file: "${{ env.python-source-dir }}/Dockerfile"
@@ -31,7 +31,7 @@ jobs:
         push: true
         tags: neverping/zeebo-python:latest
     - name: Build and publish zeebo-go image into Docker Hub.
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v5
       with:
         context: ${{ env.go-source-dir }}
         file: "${{ env.go-source-dir }}/Dockerfile"
