@@ -67,7 +67,7 @@ func main() {
 		middleware.Heartbeat("/"),
 		middleware.Heartbeat("/heartbeat"),
 		render.SetContentType(render.ContentTypeJSON),
-		middleware.DefaultCompress,
+		middleware.Compress(5),
 		middleware.Timeout(60 * time.Second),
 	}
 
