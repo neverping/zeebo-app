@@ -3,9 +3,9 @@ import logging
 
 import grpc
 import os
+# These files below are genereated by protocol buffers compiler on Dockerfile.
 import helloworld_pb2
 import helloworld_pb2_grpc
-
 
 class Greeter(helloworld_pb2_grpc.GreeterServicer):
 
