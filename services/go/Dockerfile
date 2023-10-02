@@ -1,4 +1,4 @@
-FROM golang:1.15-alpine3.13 as builder
+FROM golang:1.21-alpine3.17 as builder
 
 RUN apk add --no-cache git
 
@@ -12,7 +12,7 @@ RUN go mod download && \
   CGO_ENABLED=0 go build -o /usr/local/bin/go-service .
 
 
-FROM scratch
+FROM gcr.io/distroless/static-debian12:latest
 LABEL maintainer="neverping@gmail.com"
 COPY --from=builder /usr/local/bin/go-service /usr/local/bin/
 
