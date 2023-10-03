@@ -14,9 +14,19 @@ jobs:
       python-source-dir: ./services/python
 
     runs-on: ubuntu-latest
+#TODO: Next steps for a parallel build and push.
+# https://docs.docker.com/build/ci/github-actions/multi-platform/#distribute-build-across-multiple-runners
+#    needs to inspect the "steps:" and also add these below
+#    strategy:
+#      matrix:
+#        platform: ["linux/amd64", "linux/arm64"]
 
     steps:
     - uses: actions/checkout@v4
+    - name: Set up QEMU for multi-arch build
+      uses: docker/setup-qemu-action@v3
+    - name: Set up Docker BuildX for multi-arch build
+      uses: docker/setup-buildx-action@v3
     - name: "Login to neverping's DockerHub private account"
       uses: docker/login-action@v3
       with:
@@ -27,7 +37,7 @@ jobs:
       with:
         context: ${{ env.python-source-dir }}
         file: "${{ env.python-source-dir }}/Dockerfile"
-        platforms: linux/amd64
+        platforms: linux/amd64,linux/arm64
         push: true
         tags: neverping/zeebo-python:latest
     - name: Build and publish zeebo-go image into Docker Hub.
@@ -35,6 +45,6 @@ jobs:
       with:
         context: ${{ env.go-source-dir }}
         file: "${{ env.go-source-dir }}/Dockerfile"
-        platforms: linux/amd64
+        platforms: linux/amd64,linux/arm64
         push: true
         tags: neverping/zeebo-go:latest
