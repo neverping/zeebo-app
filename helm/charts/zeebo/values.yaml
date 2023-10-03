@@ -6,7 +6,8 @@ images:
     repository: neverping/zeebo-python
   go:
     repository: neverping/zeebo-go
-  pullPolicy: Always
+  # For local environments, this must be set.
+  pullPolicy: IfNotPresent
 
 apps:
   go:
