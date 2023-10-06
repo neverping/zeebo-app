@@ -17,3 +17,12 @@ create-python-container:
 deploy-helm-chart:
 	cd helm/charts && \
 	helm upgrade -i --cleanup-on-fail v1 zeebo/
+
+run-docker-compose:
+	docker-compose up -d
+
+stop-docker-compose:
+	docker-compose down
+
+destroy-docker-compose:
+	docker-compose down --rmi all --remove-orphans

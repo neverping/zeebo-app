@@ -1,0 +1,35 @@
+version: '3.8'
+
+networks: 
+  zeebo:
+    driver: bridge
+
+services:
+  zeebo-go:
+    build: ./services/go/
+    logging:
+      driver: "none"
+    networks:
+      - zeebo
+    ports:
+      - "4458:4458"
+    container_name: zeebo-go
+    environment:
+      SERVICE_ENDPOINT: 'zeebo-python:50051'
+      PORT: '4458' 
+    depends_on:
+      - zeebo-python
+    restart: unless-stopped
+  
+  zeebo-python:
+    build: ./services/python/
+    logging:
+      driver: "none"
+    networks:
+      - zeebo
+    ports:
+      - "50051:50051"
+    container_name: zeebo-python
+    environment:
+      PORT: '50051'
+    restart: unless-stopped
