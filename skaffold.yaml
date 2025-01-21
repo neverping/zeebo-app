@@ -1,0 +1,68 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: zeebo-app
+build:
+  artifacts:
+    - image: neverping/zeebo-go
+      context: services/go
+      docker:
+        dockerfile: Dockerfile
+    - image: neverping/zeebo-python
+      context: services/python
+      docker:
+        dockerfile: Dockerfile
+## This is required to make skaffold to render profiles.
+manifests:
+  helm:
+    releases:
+      - name: zeebo
+        chartPath: helm/charts/zeebo
+        valuesFiles:
+          - helm/charts/zeebo/values.yaml
+        version: 0.0.1
+        createNamespace: true
+        setValueTemplates:
+          images.go.repository: "{{.IMAGE_REPO_neverping_zeebo_go}}"
+          images.go.tag: "{{.IMAGE_TAG_neverping_zeebo_go}}@{{.IMAGE_DIGEST_neverping_zeebo_go}}"
+          images.python.repository: "{{.IMAGE_REPO_neverping_zeebo_python}}"
+          images.python.tag: "{{.IMAGE_TAG_neverping_zeebo_python}}@{{.IMAGE_DIGEST_neverping_zeebo_python}}"
+        # Keep this to set it to 'true' on Cloud Build + Cloud Deploy.
+        skipBuildDependencies: false
+# This is what skaffold requires normally.
+deploy:
+  helm:
+    releases:
+      - name: zeebo
+        chartPath: helm/charts/zeebo
+        valuesFiles:
+          - helm/charts/zeebo/values.yaml
+        version: 0.0.1
+        createNamespace: true
+        setValueTemplates:
+          images.go.repository: "{{.IMAGE_REPO_neverping_zeebo_go}}"
+          images.go.tag: "{{.IMAGE_TAG_neverping_zeebo_go}}@{{.IMAGE_DIGEST_neverping_zeebo_go}}"
+          images.python.repository: "{{.IMAGE_REPO_neverping_zeebo_python}}"
+          images.python.tag: "{{.IMAGE_TAG_neverping_zeebo_python}}@{{.IMAGE_DIGEST_neverping_zeebo_python}}"
+        # Keep this to set it to 'true' on Cloud Build + Cloud Deploy.
+        skipBuildDependencies: false
+profiles:
+  - name: local
+    activation:
+      - kubeContext: k3d-local
+    build:
+      local:
+        push: false
+    patches:
+      # Override Image name
+      - op: replace
+        path: /build/artifacts/0/image
+        value: go
+      - op: replace
+        path: /build/artifacts/1/image
+        value: python
+      - op: replace
+        path: /manifests/helm/releases/0/setValueTemplates
+        value:
+          images.go.repository: go
+          images.python.repository: python
