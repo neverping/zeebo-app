@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine3.17 AS builder
+FROM golang:1.23-alpine AS builder
 
 RUN apk add --no-cache git
 
@@ -12,14 +12,17 @@ RUN go mod download && \
   CGO_ENABLED=0 go build -o /usr/local/bin/go-service .
 
 
-FROM gcr.io/distroless/static-debian12:latest
+FROM gcr.io/distroless/static-debian12:nonroot
 LABEL maintainer="neverping@gmail.com"
+
+USER nonroot
+
 COPY --from=builder /usr/local/bin/go-service /usr/local/bin/
 
 ENV SERVICE_ENDPOINT=localhost
 ENV REQUEST_TIMEOUT=5
 ENV IDLE_TIMEOUT=10
-# The app listens on port 4458 by default
+# The app listens on port 4458 by default via code.
 ENV PORT=4458
 EXPOSE 4458/tcp
 
