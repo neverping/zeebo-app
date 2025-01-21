@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: {{ .Values.apps.python.svc.name }}
-        image: "{{ .Values.images.python.repository }}:latest"
+        image: "{{ .Values.images.python.repository }}:{{ .Values.images.python.tag }}"
         imagePullPolicy: {{ .Values.images.pullPolicy }}
         env:
         - name: PORT

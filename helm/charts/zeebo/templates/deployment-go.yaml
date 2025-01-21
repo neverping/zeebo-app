@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: {{ .Values.apps.go.svc.name }}
-        image: "{{ .Values.images.go.repository }}:latest"
+        image: "{{ .Values.images.go.repository }}:{{ .Values.images.go.tag }}"
         imagePullPolicy: {{ .Values.images.pullPolicy }}
         env:
         - name: PORT

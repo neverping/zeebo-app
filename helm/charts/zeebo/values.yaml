@@ -4,8 +4,10 @@ ingress:
 images:
   python:
     repository: neverping/zeebo-python
+    tag: latest
   go:
     repository: neverping/zeebo-go
+    tag: latest
   # For local environments, this must be set.
   pullPolicy: IfNotPresent
 
