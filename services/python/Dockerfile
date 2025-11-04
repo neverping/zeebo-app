@@ -1,4 +1,4 @@
-FROM python:3.13-slim-bookworm AS builder
+FROM python:3.13-slim-trixie AS builder
 
 ENV LANG=C.UTF-8
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -22,7 +22,7 @@ RUN python3 -m grpc_tools.protoc \
   --grpc_python_out=/usr/local/src/python-protobuf-generated \
   /usr/local/src/protobuf/helloworld.proto
 
-FROM python:3.13-slim-bookworm AS app
+FROM python:3.13-slim-trixie AS app
 LABEL maintainer="neverping@gmail.com"
 
 ENV VIRTUAL_ENV=/opt/virtualenv
