@@ -3,8 +3,8 @@ name: Docker Image Build CI
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+#  pull_request:
+#    branches: [ main ]
 
 jobs:
 
@@ -13,7 +13,7 @@ jobs:
       go-source-dir: ./services/go
       python-source-dir: ./services/python
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
 #TODO: Next steps for a parallel build and push.
 # https://docs.docker.com/build/ci/github-actions/multi-platform/#distribute-build-across-multiple-runners
 #    needs to inspect the "steps:" and also add these below
