@@ -13,7 +13,8 @@ jobs:
       go-source-dir: ./services/go
       python-source-dir: ./services/python
 
-    runs-on: ubuntu-slim
+    # HINT: docker-slim has no Docker, it's required to build images.
+    runs-on: ubuntu-latest
 #TODO: Next steps for a parallel build and push.
 # https://docs.docker.com/build/ci/github-actions/multi-platform/#distribute-build-across-multiple-runners
 #    needs to inspect the "steps:" and also add these below
