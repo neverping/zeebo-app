@@ -1,0 +1,48 @@
+name: Build with go
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  go-build:
+    name: "Builds the Go source and publishes the binary"
+    runs-on: ubuntu-slim
+    permissions:
+      contents: read
+    steps:
+      - name: Retrieve source code
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Setup Go 1.24.4
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.4
+      - name: Compile Go code
+        run: "cd services/go && go build -o /tmp/test.bin go-service/*"
+      - name: Upload generated binary file for the next job
+        uses: actions/upload-artifact@v6
+        with:
+          name: binary_file
+          path: /tmp/test.bin
+  publish:
+    name: "Publishes the generated binary"
+    runs-on: ubuntu-slim
+    permissions:
+      packages: write # Publishes the artifact on GitHub
+    needs:
+      - go-build
+    steps:
+      - name: Retrieve binary from go-build job
+        uses: actions/download-artifact@v6
+        with:
+          name: binary_file
+      - name: Verify Artifact before publishing
+        run: "ls -l ./test.bin"
